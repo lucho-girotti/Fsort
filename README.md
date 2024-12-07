@@ -38,5 +38,11 @@ Then, I brainstormed ideas for the name until I came up with **"Fsort"** (i.e., 
 
 Finally, I created the logo:
 
-<img src="https://github.com/user-attachments/assets/0b1b8470-2140-469a-a216-0142988b7da2" alt="Fsort" width="200" height="200">
 <img src="https://github.com/user-attachments/assets/51265521-50f0-4121-80b6-65099a15413e" alt="Fsort.me" width="200" height="200">
+
+#### **December 7, 2024**
+Today, my school holidays started, so I’ll be able to dedicate more time to this project.
+
+In terms of progress, I added a header to the webpage featuring the logo and project name. Below it, I included a "Choose Folder" button using MUI. The button is just a placeholder for now and doesn’t have functionality yet. I also updated the webpage to include a favicon (logo) and title in the browser tab.
+
+For the design, I chose a dark theme with a color palette inspired by GitHub, which I feel complements the functionality-focused nature of this project.
