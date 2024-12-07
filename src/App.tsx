@@ -1,10 +1,15 @@
 import React from 'react';
-import Title from './components/Title';
+import Header from './components/Header';
+import FolderChooser from './components/FolderChooser';
+import './App.css';
 
 const App: React.FC = () => {
   return (
     <div>
-      <Title />
+      <Header />
+      <main style={{ padding: '20px' }}>
+        <FolderChooser />
+      </main>
     </div>
   );
 };
