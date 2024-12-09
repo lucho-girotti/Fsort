@@ -3,14 +3,32 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+// Extend FileSystemDirectoryHandle to include 'entries' method
+interface ExtendedFileSystemDirectoryHandle extends FileSystemDirectoryHandle {
+  entries(): AsyncIterable<[string, FileSystemHandle]>;
+}
+
 const FolderChooser: React.FC = () => {
   const [folderHandle, setFolderHandle] = useState<FileSystemDirectoryHandle | null>(null);
+  const [fileNames, setFileNames] = useState<string[]>([]);
 
   const handleChooseFolder = async () => {
     try {
-      const handle = await window.showDirectoryPicker();
+      const handle = (await window.showDirectoryPicker()) as ExtendedFileSystemDirectoryHandle;
       setFolderHandle(handle);
       console.log('Folder chosen:', handle);
+
+      // Retrieve file names
+      const files: string[] = [];
+      console.log('Iterating over folder entries...');
+      for await (const [name, entryHandle] of handle.entries()) {
+        console.log(`Entry: ${name}, Kind: ${entryHandle.kind}`);
+        if (entryHandle.kind === 'file') {
+          files.push(name);
+        }
+      }
+      setFileNames(files);
+      console.log('Files in folder:', files);
     } catch (error) {
       console.error('Error choosing folder:', error);
     }
@@ -23,9 +41,21 @@ const FolderChooser: React.FC = () => {
       const item = items[0];
       const entry = item.webkitGetAsEntry();
       if (entry && entry.isDirectory) {
-        const handle = entry as unknown as FileSystemDirectoryHandle;
+        const handle = entry as unknown as ExtendedFileSystemDirectoryHandle;
         setFolderHandle(handle);
-        console.log('Folder chosen:', handle);
+        console.log('Folder chosen via drag-and-drop:', handle);
+
+        // Retrieve file names
+        const files: string[] = [];
+        console.log('Iterating over folder entries (drag-and-drop)...');
+        for await (const [name, entryHandle] of handle.entries()) {
+          console.log(`Entry: ${name}, Kind: ${entryHandle.kind}`);
+          if (entryHandle.kind === 'file') {
+            files.push(name);
+          }
+        }
+        setFileNames(files);
+        console.log('Files in folder (drag-and-drop):', files);
       }
     }
   }, []);
@@ -57,9 +87,19 @@ const FolderChooser: React.FC = () => {
         or drag and drop a folder here
       </Typography>
       {folderHandle && (
-        <Typography variant="body2" sx={{ marginTop: '10px' }}>
-          Folder chosen: {folderHandle.name}
-        </Typography>
+        <>
+          <Typography variant="body2" sx={{ marginTop: '10px' }}>
+            Folder chosen: {folderHandle.name}
+          </Typography>
+          <Typography variant="body2" sx={{ marginTop: '10px' }}>
+            Files in folder:
+          </Typography>
+          <ul>
+            {fileNames.map((fileName, index) => (
+              <li key={index}>{fileName}</li>
+            ))}
+          </ul>
+        </>
       )}
     </Box>
   );
